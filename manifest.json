@@ -1,0 +1,177 @@
+
+{
+    "name": "Hostbip Notifications",
+    "description": "Sends custom notifications to users using different SMS and WhatsApp gateways.",
+    "author": "Hostbip Limited",
+    "version": "1.4",
+    "language": "php",
+    "fields": {
+        "api_provider": {
+            "FriendlyName": "API Provider",
+            "Type": "dropdown",
+            "Options": {
+                "africastalking": "AfricasTalking",
+                "zender": "Zender SMS",
+                "zender_whatsapp": "Zender WhatsApp",
+                "aws_sns": "AWS SNS",
+                "twilio": "Twilio",
+                "termii": "Termii",
+                "custom_http": "Custom HTTP"
+            },
+            "Description": "Select the gateway to send notifications (SMS or WhatsApp)."
+        },
+        "api_key": {
+            "FriendlyName": "API Key",
+            "Type": "text",
+            "Size": "32",
+            "Description": "Enter the API key for the selected provider."
+        },
+        "api_secret": {
+            "FriendlyName": "API Secret",
+            "Type": "text",
+            "Size": "32",
+            "Description": "Enter the API secret for the selected provider."
+        },
+        "sender_id": {
+            "FriendlyName": "Sender ID",
+            "Type": "text",
+            "Size": "20",
+            "Description": "The name or number that appears as the sender, depending on the SMS provider."
+        },
+        "zender_api_url": {
+            "FriendlyName": "Zender API URL",
+            "Type": "text",
+            "Size": "50",
+            "Description": "Enter the Zender API URL for sending SMS or WhatsApp messages."
+        },
+        "zender_mode": {
+            "FriendlyName": "Zender Mode",
+            "Type": "dropdown",
+            "Options": {
+                "devices": "Devices Mode",
+                "credits": "Credits Mode"
+            },
+            "Description": "Select the Zender mode (devices or credits)."
+        },
+        "zender_device": {
+            "FriendlyName": "Zender Device ID",
+            "Type": "text",
+            "Size": "10",
+            "Description": "Enter the Zender device ID to be used (for devices mode)."
+        },
+        "zender_sim": {
+            "FriendlyName": "Zender SIM ID",
+            "Type": "text",
+            "Size": "10",
+            "Description": "Enter the Zender SIM ID to be used (for devices with multiple SIMs)."
+        },
+        "custom_http_url": {
+            "FriendlyName": "Custom HTTP SMS Gateway URL",
+            "Type": "text",
+            "Size": "50",
+            "Description": "Enter the URL for the custom HTTP SMS gateway."
+        },
+        "custom_http_parameters": {
+            "FriendlyName": "Custom HTTP Parameters",
+            "Type": "textarea",
+            "Rows": "5",
+            "Description": "Define additional parameters for the custom HTTP gateway in key=value format."
+        },
+        "custom_message_client_signup": {
+            "FriendlyName": "Custom Message: Client Signup",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for client signup. Use placeholders like {firstname}, {lastname}, {email}."
+        },
+        "custom_message_invoice_creation": {
+            "FriendlyName": "Custom Message: Invoice Creation",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for invoice creation. Use placeholders like {invoiceid}, {invoicedate}, {amount}."
+        },
+        "custom_message_invoice_paid": {
+            "FriendlyName": "Custom Message: Invoice Paid",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for invoice paid. Use placeholders like {invoiceid}, {amount}, {invoicedate}."
+        },
+        "custom_message_service_activation": {
+            "FriendlyName": "Custom Message: Service Activation",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for service activation. Use placeholders like {domain}, {registrationdate}, {nextduedate}."
+        },
+        "custom_message_client_login": {
+            "FriendlyName": "Custom Message: Client Login",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for client login. Use placeholders like {firstname}, {lastname}."
+        },
+        "custom_message_domain_registration": {
+            "FriendlyName": "Custom Message: Domain Registration",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for domain registration. Use placeholders like {domain}, {registrationdate}, {expirydate}."
+        },
+        "custom_message_domain_expiring": {
+            "FriendlyName": "Custom Message: Domain Expiring",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for domain expiring. Use placeholders like {domain}, {expirydate}."
+        },
+        "custom_message_domain_expired": {
+            "FriendlyName": "Custom Message: Domain Expired",
+            "Type": "textarea",
+            "Rows": "3",
+            "Description": "Custom notification message for domain expired. Use placeholders like {domain}, {expirydate}."
+        },
+        "notify_client_signup": {
+            "FriendlyName": "Client Signup Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a new client registers.",
+            "Default": "yes"
+        },
+        "notify_invoice_creation": {
+            "FriendlyName": "Invoice Creation Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a new invoice is created.",
+            "Default": "yes"
+        },
+        "notify_invoice_paid": {
+            "FriendlyName": "Invoice Paid Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when an invoice is paid.",
+            "Default": "yes"
+        },
+        "notify_service_activation": {
+            "FriendlyName": "Service Activation Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a service is activated.",
+            "Default": "yes"
+        },
+        "notify_client_login": {
+            "FriendlyName": "Client Login Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a client logs in.",
+            "Default": "yes"
+        },
+        "notify_domain_registration": {
+            "FriendlyName": "Domain Registration Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a domain is registered.",
+            "Default": "yes"
+        },
+        "notify_domain_expiring": {
+            "FriendlyName": "Domain Expiring Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a domain is expiring.",
+            "Default": "yes"
+        },
+        "notify_domain_expired": {
+            "FriendlyName": "Domain Expired Notification",
+            "Type": "yesno",
+            "Description": "Enable or disable notification when a domain expires.",
+            "Default": "yes"
+        }
+    }
+}
