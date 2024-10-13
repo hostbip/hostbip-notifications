@@ -1,108 +1,48 @@
+# Hostbip Notifications WHMCS Addon
 
-# Hostbip Notifications
-
-Hostbip Notifications is a WHMCS addon module that allows you to send custom notifications via various SMS and WhatsApp gateways. Supported providers include AfricasTalking, Zender, AWS SNS, Twilio, Termii, and a Custom HTTP gateway.
-
-## Features
-- Send notifications via popular SMS and WhatsApp gateways.
-- Configure custom messages for events such as client signup, invoice creation, service activation, etc.
-- Hooks for key WHMCS events like domain registration and invoice payments.
-- Custom placeholders for dynamic message content.
-- Extensive logging for both activity and module-level API interactions.
+## Overview
+The Hostbip Notifications addon module allows sending SMS and WhatsApp notifications using multiple providers such as AfricasTalking, Zender, AWS SNS, Twilio, Termii, Nexmo (Vonage), MessageBird, and Custom HTTP.
 
 ## Installation
-
-### Step 1: Upload Files
-Upload the Hostbip Notifications module to the `/modules/addons/hostbip_notifications` directory in your WHMCS installation.
-
-### Step 2: Activate the Module
-1. Log in to the WHMCS Admin area.
-2. Navigate to **Setup > Addon Modules**.
+1. Upload the module directory to `/modules/addons/hostbip_notifications/`.
+2. In WHMCS Admin, navigate to **Setup > Addon Modules**.
 3. Find **Hostbip Notifications** and click **Activate**.
-4. Click **Configure** to set the module options and API settings.
+4. Configure the module by selecting the desired API provider and filling out the API keys and sender information.
 
-### Step 3: Configure API Providers
-The following gateways are supported:
-- **AfricasTalking**
-- **Zender SMS**
-- **Zender WhatsApp**
-- **AWS SNS**
-- **Twilio**
-- **Termii**
-- **Custom HTTP Gateway**
-
-For each provider, configure the required fields:
-- **API Key**
-- **API Secret** (if applicable)
-- **Sender ID** (custom name or number)
-
-For **Zender**, you also need to configure:
-- **API URL**
-- **Mode (devices or credits)**
-- **Device ID**
-- **SIM ID**
-
-For the **Custom HTTP Gateway**, define parameters in key-value format such as:
-```
-api_key=YOUR_API_KEY
-secret=YOUR_SECRET
-sender=YOUR_SENDER_ID
-recipient={phonenumber}
-message={message}
-```
-
-### Step 4: Customize Notification Messages
-You can define custom messages for events such as:
-- **Client Signup**
-- **Invoice Creation**
-- **Invoice Paid**
-- **Service Activation**
-- **Client Login**
-- **Domain Registration**
-- **Domain Expiry**
-
-These messages support placeholders, including:
-- `{firstname}`, `{lastname}`, `{domain}`, `{invoiceid}`, `{invoicedate}`, `{amount}`, `{registrationdate}`, `{expirydate}`
-
-## Notification Hooks
-The following hooks are implemented and will trigger notifications when appropriate:
-- **Client Signup (ClientAdd)**
-- **Invoice Creation (InvoiceCreationPreEmail)**
-- **Invoice Paid (InvoicePaid)**
-- **Service Activation (AfterModuleCreate)**
-- **Client Login (ClientLogin)**
-- **Domain Registration (AfterRegistrarRegistration)**
-- **Domain Expiry Notice (DomainExpiryNotice)**
-- **Domain Expired (AfterRegistrarExpired)**
+## Configuration
+1. Go to **Setup > Addon Modules > Hostbip Notifications > Configure**.
+2. Select your API provider (e.g., AfricasTalking, Twilio, etc.).
+3. Fill in the API key, secret, sender ID, and any additional required fields.
+4. Set custom notification messages using placeholders like `{firstname}`, `{lastname}`, `{invoiceid}`, `{domain}`, etc.
 
 ## Logging
-- **Activity Log**: General activity, such as sending messages or receiving responses, is logged under **Utilities > Logs > Activity Log**.
-- **Module Log**: Detailed API request and response data is logged using `logModuleCall`. View these logs in **Utilities > Logs > Module Log**.
+- All API requests and responses are logged for debugging and tracking purposes using **logActivity** and **logModuleCall**.
+- To enable module logging, navigate to **Utilities > Logs > Module Log**.
 
-## Error Handling
-- API errors (e.g., invalid credentials or network issues) are logged in the Module Log.
-- Ensure that API credentials (API key, secret, sender ID) are correctly configured for each provider.
+## Hooks and Notifications
+- Notifications are triggered for various WHMCS events such as:
+  - **Client Signup**
+  - **Invoice Creation**
+  - **Invoice Paid**
+  - **Service Activation**
+  - **Domain Registration**
+  - **Domain Expiring**
+  - **Domain Expired**
+  - **User Login**, **User Logout**, **Password Change**, and more.
 
-## Recommendations for Improvement
-1. **Retry Mechanism**: Implement a retry mechanism for failed notifications.
-2. **Additional Placeholders**: Add more placeholders for events like service renewals and account balances.
-3. **Enhanced Logging**: Add more detailed error messages and HTTP response codes to logs.
-4. **Rate Limiting**: Implement rate-limiting logic for gateways with rate limits (e.g., Twilio, AWS SNS).
-5. **Multi-language Support**: Add support for multiple languages in custom notifications.
-6. **Support for More Gateways**: Expand support for additional SMS gateways such as Nexmo (Vonage) and MessageBird.
+## Upgrading
+The module includes an `upgrade()` function to handle upgrades. If you upgrade from a previous version, the system will automatically update any necessary settings.
 
-## Testing the Module
-### Step 1: Configure Settings
-- Set up the API credentials and custom messages in **Addon Modules > Hostbip Notifications**.
+## Rate Limiting
+For gateways that have rate limits (e.g., Twilio, AWS SNS), set the **Rate Limit** in the configuration page. This will prevent exceeding limits by controlling the number of requests per minute.
 
-### Step 2: Test Notifications
-- Perform test actions such as client signup, invoice creation, and domain registration to verify that notifications are sent as expected.
-- Check both **Activity Log** and **Module Log** for potential issues.
+## Error Handling and Retries
+The module has built-in error handling and retries failed notifications. Logs will include detailed error messages and HTTP response codes for failed attempts.
 
-## Contact Information
-For support or inquiries, please contact **Hostbip Limited**.
+## Customization
+You can customize notification messages for each hook (e.g., client signup, invoice creation) and use placeholders like:
+- `{firstname}`, `{lastname}`, `{email}`
+- `{domain}`, `{expirydate}`, `{registrationdate}`, `{invoiceid}`, `{amount}`
 
----
-
-### License
-This project is licensed under the MIT License.
+## Multi-language Support
+Notification messages support multiple languages. You can add custom messages in different languages from the module configuration page.
