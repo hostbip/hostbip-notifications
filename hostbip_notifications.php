@@ -1,109 +1,360 @@
 <?php
 
+/**
+ * WHMCS Hostbip Notifications Module
+ *
+ * @package Hostbip Notifications
+ * @author Hostbip Limited
+ * @version 1.0
+ */
+
 if (!defined("WHMCS")) {
-    die("This file cannot be accessed directly.");
+    die("This file cannot be accessed directly");
 }
 
+// Register the module in WHMCS
 function hostbip_notifications_config()
 {
     return [
         'name' => 'Hostbip Notifications',
-        'description' => 'Sends custom notifications to users using different SMS and WhatsApp gateways.',
-        'version' => '1.4',
+        'description' => 'Send notifications via SMS and WhatsApp using various gateways.',
+        'version' => '1.0',
         'author' => 'Hostbip Limited',
         'fields' => [
             'api_provider' => [
-                'FriendlyName' => 'API Provider',
+                'FriendlyName' => 'Select API Provider',
                 'Type' => 'dropdown',
                 'Options' => [
                     'africastalking' => 'AfricasTalking',
-                    'zender' => 'Zender SMS',
+                    'zender_sms' => 'Zender SMS',
                     'zender_whatsapp' => 'Zender WhatsApp',
                     'aws_sns' => 'AWS SNS',
                     'twilio' => 'Twilio',
                     'termii' => 'Termii',
-                    'custom_http' => 'Custom HTTP'
+                    'nexmo' => 'Nexmo',
+                    'messagebird' => 'MessageBird',
+                    'custom_http' => 'Custom HTTP',
                 ],
-                'Description' => 'Select the gateway to send notifications (SMS or WhatsApp).'
+                'Description' => 'Select the SMS or WhatsApp provider to use for notifications.',
             ],
-            'api_key' => [
-                'FriendlyName' => 'API Key',
+            // API credentials for Africa's Talking
+            'africastalking_api_key' => [
+                'FriendlyName' => 'Africa\'s Talking API Key',
                 'Type' => 'text',
-                'Size' => '32',
-                'Description' => 'Enter the API key for the selected provider.'
+                'Description' => 'Your Africa\'s Talking API Key.',
             ],
-            'api_secret' => [
-                'FriendlyName' => 'API Secret',
+            'africastalking_username' => [
+                'FriendlyName' => 'Africa\'s Talking Username',
                 'Type' => 'text',
-                'Size' => '32',
-                'Description' => 'Enter the API secret for the selected provider.'
+                'Description' => 'Your Africa\'s Talking Username.',
             ],
-
-            'sender_id' => [
-                'FriendlyName' => 'Sender ID',
+            // API credentials for Zender SMS
+            'zender_sms_api_key' => [
+                'FriendlyName' => 'Zender SMS API Key',
                 'Type' => 'text',
-                'Size' => '20',
-                'Description' => 'The name or number that appears as the sender, depending on the SMS provider.'
+                'Description' => 'Your Zender SMS API Secret.',
             ],
-            'zender_api_url' => [
-                'FriendlyName' => 'Zender API URL',
-                'Type' => 'text',
-                'Size' => '50',
-                'Description' => 'Enter the Zender API URL for sending SMS or WhatsApp messages.'
-            ],
-            'zender_mode' => [
-                'FriendlyName' => 'Zender Mode',
+            'zender_sms_mode' => [
+                'FriendlyName' => 'Zender SMS Mode',
                 'Type' => 'dropdown',
                 'Options' => [
-                    'devices' => 'Devices Mode',
-                    'credits' => 'Credits Mode'
+                    'devices' => 'Devices',
+                    'credits' => 'Credits',
                 ],
-                'Description' => 'Select the Zender mode (devices or credits).'
+                'Description' => 'Select the mode for sending SMS.',
             ],
-            'zender_device' => [
-                'FriendlyName' => 'Zender Device ID',
+            'zender_sms_phone' => [
+                'FriendlyName' => 'Zender SMS Phone',
                 'Type' => 'text',
-                'Size' => '10',
-                'Description' => 'Enter the Zender device ID to be used (for devices mode).'
+                'Description' => 'Recipient phone number.',
             ],
-            'zender_sim' => [
-                'FriendlyName' => 'Zender SIM ID',
-                'Type' => 'text',
-                'Size' => '10',
-                'Description' => 'Enter the Zender SIM ID to be used (for devices with multiple SIMs).'
-            ],
-            'custom_http_url' => [
-                'FriendlyName' => 'Custom HTTP SMS Gateway URL',
-                'Type' => 'text',
-                'Size' => '50',
-                'Description' => 'Enter the URL for the custom HTTP SMS gateway.'
-            ],
-            'custom_http_parameters' => [
-                'FriendlyName' => 'Custom HTTP Parameters',
+            'zender_sms_message' => [
+                'FriendlyName' => 'Zender SMS Message',
                 'Type' => 'textarea',
-                'Rows' => '5',
-                'Description' => 'Define additional parameters for the custom HTTP gateway in key=value format.'
+                'Description' => 'Message to send via Zender SMS.',
             ],
-        ]
+            'zender_sms_priority' => [
+                'FriendlyName' => 'Zender SMS Priority',
+                'Type' => 'dropdown',
+                'Options' => [
+                    '1' => 'Yes',
+                    '2' => 'No',
+                ],
+                'Description' => 'Send message with priority.',
+            ],
+            // API credentials for Zender WhatsApp
+            'zender_whatsapp_api_key' => [
+                'FriendlyName' => 'Zender WhatsApp API Key',
+                'Type' => 'text',
+                'Description' => 'Your Zender WhatsApp API Secret.',
+            ],
+            'zender_whatsapp_account' => [
+                'FriendlyName' => 'Zender WhatsApp Account',
+                'Type' => 'text',
+                'Description' => 'WhatsApp account ID.',
+            ],
+            'zender_whatsapp_type' => [
+                'FriendlyName' => 'Zender WhatsApp Message Type',
+                'Type' => 'dropdown',
+                'Options' => [
+                    'text' => 'Text',
+                    'media' => 'Media',
+                ],
+                'Description' => 'Type of message to send via WhatsApp.',
+            ],
+            'zender_whatsapp_message' => [
+                'FriendlyName' => 'Zender WhatsApp Message',
+                'Type' => 'textarea',
+                'Description' => 'Message to send via Zender WhatsApp.',
+            ],
+            'zender_whatsapp_priority' => [
+                'FriendlyName' => 'Zender WhatsApp Priority',
+                'Type' => 'dropdown',
+                'Options' => [
+                    '1' => 'Yes',
+                    '2' => 'No',
+                ],
+                'Description' => 'Send WhatsApp message with priority.',
+            ],
+            // API credentials for AWS SNS
+            'aws_region' => [
+                'FriendlyName' => 'AWS Region',
+                'Type' => 'text',
+                'Description' => 'The AWS region for SNS.',
+            ],
+            // API credentials for Twilio
+            'twilio_account_sid' => [
+                'FriendlyName' => 'Twilio Account SID',
+                'Type' => 'text',
+                'Description' => 'Your Twilio Account SID.',
+            ],
+            'twilio_auth_token' => [
+                'FriendlyName' => 'Twilio Auth Token',
+                'Type' => 'text',
+                'Description' => 'Your Twilio Auth Token.',
+            ],
+            'twilio_from' => [
+                'FriendlyName' => 'Twilio From Number',
+                'Type' => 'text',
+                'Description' => 'The Twilio phone number to send messages from.',
+            ],
+            // API credentials for Termii
+            'termii_api_key' => [
+                'FriendlyName' => 'Termii API Key',
+                'Type' => 'text',
+                'Description' => 'Your Termii API Key.',
+            ],
+            'termii_from' => [
+                'FriendlyName' => 'Termii From Number',
+                'Type' => 'text',
+                'Description' => 'Sender ID for Termii messages.',
+            ],
+            'termii_channel' => [
+                'FriendlyName' => 'Termii Channel',
+                'Type' => 'dropdown',
+                'Options' => [
+                    'dnd' => 'DND',
+                    'whatsapp' => 'WhatsApp',
+                    'generic' => 'Generic',
+                ],
+                'Description' => 'The channel through which to send the message.',
+            ],
+            // API credentials for Nexmo
+            'nexmo_api_key' => [
+                'FriendlyName' => 'Nexmo API Key',
+                'Type' => 'text',
+                'Description' => 'Your Nexmo API Key.',
+            ],
+            'nexmo_api_secret' => [
+                'FriendlyName' => 'Nexmo API Secret',
+                'Type' => 'text',
+                'Description' => 'Your Nexmo API Secret.',
+            ],
+            // API credentials for MessageBird
+            'messagebird_api_key' => [
+                'FriendlyName' => 'MessageBird API Key',
+                'Type' => 'text',
+                'Description' => 'Your MessageBird API Key.',
+            ],
+            'messagebird_originator' => [
+                'FriendlyName' => 'MessageBird Originator',
+                'Type' => 'text',
+                'Description' => 'Your MessageBird sender ID.',
+            ],
+            // API credentials for Custom HTTP
+            'custom_http_url' => [
+                'FriendlyName' => 'Custom HTTP URL',
+                'Type' => 'text',
+                'Description' => 'The URL for sending notifications via Custom HTTP.',
+            ],
+            // Enable/Disable Hooks
+            'enable_admin_send_user_message' => [
+                'FriendlyName' => 'Enable Admin Send User Message',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable the ability for admins to send messages directly to users.',
+            ],
+            'enable_client_signup' => [
+                'FriendlyName' => 'Enable Client Signup Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for client signups.',
+            ],
+            'enable_invoice_creation' => [
+                'FriendlyName' => 'Enable Invoice Creation Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for invoice creation.',
+            ],
+            'enable_invoice_paid' => [
+                'FriendlyName' => 'Enable Invoice Paid Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for invoice payments.',
+            ],
+            'enable_user_login' => [
+                'FriendlyName' => 'Enable User Login Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for user logins.',
+            ],
+            'enable_after_module_create' => [
+                'FriendlyName' => 'Enable After Module Create Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications after module creation.',
+            ],
+            'enable_after_registrar_registration' => [
+                'FriendlyName' => 'Enable After Registrar Registration Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications after domain registration.',
+            ],
+            'enable_domain_expiry_notice' => [
+                'FriendlyName' => 'Enable Domain Expiry Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for domain expiry.',
+            ],
+            'enable_after_registrar_expired' => [
+                'FriendlyName' => 'Enable After Registrar Expired Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications after domain expiry.',
+            ],
+            'enable_service_delete' => [
+                'FriendlyName' => 'Enable Service Delete Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for service deletions.',
+            ],
+            'enable_user_logout' => [
+                'FriendlyName' => 'Enable User Logout Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for user logouts.',
+            ],
+            'enable_client_change_password' => [
+                'FriendlyName' => 'Enable Client Change Password Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for client password changes.',
+            ],
+            'enable_user_add' => [
+                'FriendlyName' => 'Enable User Add Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for new users.',
+            ],
+            'enable_service_renewal' => [
+                'FriendlyName' => 'Enable Service Renewal Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for service renewals.',
+            ],
+            'enable_account_balance' => [
+                'FriendlyName' => 'Enable Account Balance Notifications',
+                'Type' => 'yesno',
+                'Description' => 'Enable or disable notifications for account balance updates.',
+            ],
+            // Message Templates
+            'custom_message_client_signup' => [
+                'FriendlyName' => 'Client Signup Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for client signup notifications.',
+            ],
+            'custom_message_invoice_creation' => [
+                'FriendlyName' => 'Invoice Creation Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for invoice creation notifications.',
+            ],
+            'custom_message_invoice_paid' => [
+                'FriendlyName' => 'Invoice Paid Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for invoice paid notifications.',
+            ],
+            'custom_message_user_login' => [
+                'FriendlyName' => 'User Login Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for user login notifications.',
+            ],
+            'custom_message_after_module_create' => [
+                'FriendlyName' => 'After Module Create Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for notifications after module creation.',
+            ],
+            'custom_message_after_registrar_registration' => [
+                'FriendlyName' => 'After Registrar Registration Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for notifications after domain registration.',
+            ],
+            'custom_message_domain_expiry_notice' => [
+                'FriendlyName' => 'Domain Expiry Notice Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for domain expiry notifications.',
+            ],
+            'custom_message_after_registrar_expired' => [
+                'FriendlyName' => 'After Registrar Expired Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for notifications after domain expiry.',
+            ],
+            'custom_message_service_delete' => [
+                'FriendlyName' => 'Service Delete Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for service deletion notifications.',
+            ],
+            'custom_message_user_logout' => [
+                'FriendlyName' => 'User Logout Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for user logout notifications.',
+            ],
+            'custom_message_client_change_password' => [
+                'FriendlyName' => 'Client Change Password Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for client change password notifications.',
+            ],
+            'custom_message_user_add' => [
+                'FriendlyName' => 'User Add Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for new user notifications.',
+            ],
+            'custom_message_service_renewal' => [
+                'FriendlyName' => 'Service Renewal Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for service renewal notifications.',
+            ],
+            'custom_message_account_balance' => [
+                'FriendlyName' => 'Account Balance Message Template',
+                'Type' => 'textarea',
+                'Description' => 'Message template for account balance notifications.',
+            ],
+        ],
     ];
 }
 
+// Activation function for the module
 function hostbip_notifications_activate()
 {
-    return ['status' => 'success', 'description' => 'Module activated successfully.'];
+    // Code to run when the module is activated
 }
 
+// Deactivation function for the module
 function hostbip_notifications_deactivate()
 {
-    return ['status' => 'success', 'description' => 'Module deactivated successfully.'];
+    // Code to run when the module is deactivated
 }
 
-function hostbip_notifications_output($vars)
-{
-    echo '<p>Hostbip Notifications Module: This module enables sending notifications through various SMS and WhatsApp gateways.</p>';
-}
-
+// Upgrade function to handle module upgrades
 function hostbip_notifications_upgrade($vars)
 {
-    // Optional: Handle upgrades here, if necessary
+    // Code to run when the module is upgraded
 }
+
+// Include hooks
+include __DIR__ . '/hooks.php';
