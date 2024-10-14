@@ -54,6 +54,11 @@ function hostbip_notifications_config()
                 'Type' => 'text',
                 'Description' => 'Your Zender SMS API Secret.',
             ],
+            'zender_sms_url' => [
+                'FriendlyName' => 'Zender SMS API URL',
+                'Type' => 'text',
+                'Description' => 'The URL for sending SMS via Zender.',
+            ],
             'zender_sms_mode' => [
                 'FriendlyName' => 'Zender SMS Mode',
                 'Type' => 'dropdown',
@@ -87,6 +92,11 @@ function hostbip_notifications_config()
                 'FriendlyName' => 'Zender WhatsApp API Key',
                 'Type' => 'text',
                 'Description' => 'Your Zender WhatsApp API Secret.',
+            ],
+            'zender_whatsapp_url' => [
+                'FriendlyName' => 'Zender WhatsApp API URL',
+                'Type' => 'text',
+                'Description' => 'The URL for sending messages via Zender WhatsApp.',
             ],
             'zender_whatsapp_account' => [
                 'FriendlyName' => 'Zender WhatsApp Account',
